@@ -46,28 +46,46 @@ Type "clear"
 Enter
 Show
 
-# --- DOCKER SENARYOSU ---
-Type "# Docker Projesi Gösterimi"
+# --- DOCKER SENARYOSU: LOGLAR VE ÇIKTI ---
+Type "# Docker Projesi Başlatılıyor ve Çıktı Üretiliyor..."
 Enter
 Sleep 1s
 
-Type "docker run --name vhs-demo -d alpine sleep 1000"
+# Konteyneri başlat ve logları izle
+Type "docker run --name vhs-islem -d alpine sh -c 'echo \"Islem basliyor...\"; sleep 1; echo \"Veriler isleniyor [25%]\"; sleep 1; echo \"Veriler isleniyor [75%]\"; sleep 1; echo \"Islem tamamlandi. Sonuc dosyasi olusturuldu.\"; echo \"SUCCESS\" > output.txt; sleep 100'"
 Enter
 Sleep 2s
 
-Type "docker ps"
+Type "docker logs -f vhs-islem"
 Enter
-Sleep 2s
 
-Type "docker exec vhs-demo echo 'Selam Dünya!'"
-Enter
-Sleep 2s
+# 'Islem tamamlandi' yazısını bekle (Görsel akış için çok önemli!)
+Wait+Line /Islem tamamlandi/
+Sleep 1s
 
-Type "# Temizlik..."
+# Log takibinden çık (Ctrl+C simülasyonu)
+Ctrl+C
+Sleep 1s
+
+# Çıktıyı göster (Vurgulama kuralı)
+Hide
+Type "clear"
 Enter
-Type "docker rm -f vhs-demo"
+Show
+
+Type "# İşlem bitti! Oluşan sonucu görelim:"
 Enter
 Sleep 1s
 
-Type "# Kayıt Tamamlandı!"
+Type "docker exec vhs-islem cat output.txt"
+Enter
+Sleep 2s
+
+# Temizlik
+Hide
+Type "docker rm -f vhs-islem"
+Enter
+Show
+
+Type "# Tüm süreç başarıyla tamamlandı!"
 Sleep 3s

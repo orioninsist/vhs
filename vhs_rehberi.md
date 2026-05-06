@@ -33,7 +33,20 @@ docker run --rm -v $PWD:/vhs ghcr.io/charmbracelet/vhs demo.tape
 
 ---
 
-## 🎬 Senaryolar ve Örnek `demo.tape`
+## 🎭 Gelişmiş Senaryo: İşlem Logları ve Çıktı Gösterimi
+
+Bir projeyi (örneğin Docker) çalıştırırken terminalde akan yazıları göstermek ve sonunda bir çıktı (dosya, başarı mesajı vb.) oluşturmak en yaygın senaryodur. Bunu en şık şu şekilde yaparsınız:
+
+### 💡 Özel Kurallar ve İpuçları
+
+1.  **Wait Komutu:** Statik bir `Sleep` yerine `Wait` kullanın. Bu, terminalde belirli bir yazı (regex) çıkana kadar bekler. Kaydın "canlı" ve tepkisel hissetmesini sağlar.
+2.  **Hide/Show Stratejisi:** Eğer loglar çok uzun ve sıkıcıysa, bir kısmını `Hide` ile gizleyin, sadece kritik aşamaları gösterin.
+3.  **Çıktıyı Vurgulama:** İşlem bittiğinde ekranı temizleyip (`clear`) sadece oluşan çıktıyı veya başarı mesajını gösterin. Bu, izleyicinin odağını sonuca çeker.
+4.  **Zaman Daraltma:** Uzun süren derleme (build) aşamalarını hızlandırmak için o kısımda `Set TypingSpeed` değerini düşürebilir veya `Sleep` sürelerini kısa tutabilirsiniz.
+
+---
+
+## 🎬 Güncellenmiş Senaryolar ve Örnek `demo.tape`
 
 Aşağıdaki dosya, istediğiniz tüm senaryoları (Güzellik kuralları, Docker, Bağımlılıklar, En iyi ayarlar) bir araya getiriyor.
 
@@ -82,31 +95,48 @@ Type "✔ ttyd bulundu"
 Sleep 1s
 Enter
 
-# --- SENARYO 2: DOCKER PROJESİ ÖRNEĞİ ---
+# --- SENARYO 2: DOCKER LOGLARI VE ÇIKTI ---
+Type "# Docker Projesi Başlatılıyor ve Çıktı Üretiliyor..."
+Enter
+Sleep 1s
+
+# Konteyneri başlat ve logları izle
+Type "docker run --name vhs-islem -d alpine sh -c 'echo \"Islem basliyor...\"; sleep 1; echo \"Veriler isleniyor [25%]\"; sleep 1; echo \"Veriler isleniyor [75%]\"; sleep 1; echo \"Islem tamamlandi. Sonuc dosyasi olusturuldu.\"; echo \"SUCCESS\" > output.txt; sleep 100'"
+Enter
+Sleep 2s
+
+Type "docker logs -f vhs-islem"
+Enter
+
+# 'Islem tamamlandi' yazısını bekle (Görsel akış için çok önemli!)
+Wait+Line /Islem tamamlandi/
+Sleep 1s
+
+# Log takibinden çık (Ctrl+C simülasyonu)
+Ctrl+C
+Sleep 1s
+
+# Çıktıyı göster (Vurgulama kuralı)
 Hide
 Type "clear"
 Enter
 Show
 
-Type "# Bir Docker konteyneri başlatılıyor..."
-Enter
-Sleep 500ms
-
-Type "docker run --name vhs-demo -d alpine sleep 1000"
-Enter
-Sleep 2s
-
-Type "docker ps"
-Enter
-Sleep 3s
-
-Type "# Konteyner temizleniyor..."
-Enter
-Type "docker rm -f vhs-demo"
+Type "# İşlem bitti! Oluşan sonucu görelim:"
 Enter
 Sleep 1s
 
-Type "# İşlem Tamamlandı!"
+Type "docker exec vhs-islem cat output.txt"
+Enter
+Sleep 2s
+
+# Temizlik
+Hide
+Type "docker rm -f vhs-islem"
+Enter
+Show
+
+Type "# Tüm süreç başarıyla tamamlandı!"
 Sleep 3s
 ```
 
