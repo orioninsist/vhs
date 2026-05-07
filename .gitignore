@@ -10,4 +10,4 @@ vhs
 .idea/
 .vscode/
 
-docs/*
+*.mp4
