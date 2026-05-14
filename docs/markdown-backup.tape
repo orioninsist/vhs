@@ -1,6 +1,7 @@
 Output orioninsist-cli-2-long.mp4
-Require glow
 Require bash
+Require glow
+Require bat
 Require base64
 
 Set Shell "bash"
