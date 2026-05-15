@@ -215,7 +215,7 @@ func (p *Parser) parseWait() Command {
 		}
 	}
 
-	if p.peek.Type != token.REGEX {
+	if p.peek.Type != token.REGEX && p.peek.Type != token.STRING {
 		// fallback to default
 		return cmd
 	}
@@ -509,6 +509,26 @@ func (p *Parser) parseSet() Command {
 					NewError(
 						p.cur,
 						"\""+marginFill+"\" is not a valid color.",
+					),
+				)
+			}
+		}
+	case token.BACKGROUND_COLOR, token.WINDOW_BAR_COLOR, token.CURSOR_COLOR, token.SELECTION_COLOR, token.CURSOR_ACCENT:
+		cmd.Args = p.peek.Literal
+		p.nextToken()
+
+		color := p.cur.Literal
+
+		// Check if color is a valid hex string
+		if strings.HasPrefix(color, "#") {
+			_, err := strconv.ParseUint(color[1:], 16, 64)
+
+			if err != nil || (len(color) != 7 && len(color) != 4) {
+				p.errors = append(
+					p.errors,
+					NewError(
+						p.cur,
+						"\""+color+"\" is not a valid color.",
 					),
 				)
 			}

@@ -479,6 +479,11 @@ var Settings = map[string]CommandFunc{
 	"WaitPattern":   ExecuteSetWaitPattern,
 	"WaitTimeout":   ExecuteSetWaitTimeout,
 	"CursorBlink":   ExecuteSetCursorBlink,
+	"BackgroundColor": ExecuteSetBackgroundColor,
+	"WindowBarColor":  ExecuteSetWindowBarColor,
+	"CursorColor":     ExecuteSetCursorColor,
+	"SelectionColor":  ExecuteSetSelectionColor,
+	"CursorAccent":    ExecuteSetCursorAccent,
 }
 
 // ExecuteSet applies the settings on the running vhs specified by the
@@ -745,6 +750,36 @@ func ExecuteSetCursorBlink(c parser.Command, v *VHS) error {
 		return fmt.Errorf("failed to parse cursor blink: %w", err)
 	}
 
+	return nil
+}
+
+// ExecuteSetBackgroundColor sets vhs background color.
+func ExecuteSetBackgroundColor(c parser.Command, v *VHS) error {
+	v.Options.Video.Style.BackgroundColor = c.Args
+	return nil
+}
+
+// ExecuteSetWindowBarColor sets vhs window bar color.
+func ExecuteSetWindowBarColor(c parser.Command, v *VHS) error {
+	v.Options.Video.Style.WindowBarColor = c.Args
+	return nil
+}
+
+// ExecuteSetCursorColor sets vhs cursor color.
+func ExecuteSetCursorColor(c parser.Command, v *VHS) error {
+	v.Options.Theme.Cursor = c.Args
+	return nil
+}
+
+// ExecuteSetSelectionColor sets vhs selection color.
+func ExecuteSetSelectionColor(c parser.Command, v *VHS) error {
+	v.Options.Theme.Selection = c.Args
+	return nil
+}
+
+// ExecuteSetCursorAccent sets vhs cursor accent color.
+func ExecuteSetCursorAccent(c parser.Command, v *VHS) error {
+	v.Options.Theme.CursorAccent = c.Args
 	return nil
 }
 
