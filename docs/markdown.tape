@@ -68,21 +68,69 @@ Env PAGER less
 Env LESS "-R"
 
 
-Type "clear && glow -p -s dark -w 52 https://github.com/orioninsist/orioninsist.github.io/blob/main/content/blog/2026/04/2026-04-29-soc-structure-tier-1-role.md"
+Hide
+Type@20ms "clear && glow -p -s dark -w 52 orioninsist-cli-1.md"
 Enter
-Sleep 3s
+Show
+
+Sleep 4s                                  # Ilk ekranin okunmasi icin bekler.
+Down@60ms 8                               # Yavas ve okunabilir scroll.
+Sleep 4s                               # Scroll sonrasi bekleme.
+Down@60ms 8                               # Ikinci scroll blogu.
+Sleep 4s 
+Down@60ms 8                               # Ikinci scroll blogu.
+Sleep 4s 
+Down@60ms 8                               # Ikinci scroll blogu.
+Sleep 4s 
+
+# md den shell geciste ciksi yapmak lazim 
+Type  "q"
+Sleep 1s
 
 
+Hide
+Type "clear && bat --paging=always --style=header,grid,numbers --color=always --pager 'less -R' orioninsist-cli-1.sh"
+Enter
+Wait+Screen@8s /set -euo pipefail|Usage:|rsync/
+Show
+
+Sleep 2s                                  # Ilk ekran kod okunurken dursun.
+
+Down@300ms 10                             # 3 saniyede 10 satir asagi iner.
+Sleep 2s                                  # Okuma molasi.
+
+Down@300ms 10                             # Tekrar 3 saniyede 10 satir asagi iner.
+Sleep 2s
 
 
+# shell den bas calistirma yeri  
+Type "q"
+Sleep 1s
 
+Hide
+Type "clear"
+Enter
+Type "chmod +x orioninsist-cli-1.sh"
+Enter
+Type "rm -rf /tmp/orion-src /tmp/orion-dest"
+Enter
+Type "mkdir -p /tmp/orion-src /tmp/orion-dest"
+Enter
+Type "printf 'demo file\n' > /tmp/orion-src/example.txt"
+Enter
+Show
 
+Type@35ms "./orioninsist-cli-1.sh /tmp/orion-src /tmp/orion-dest"
+Enter
 
+Wait+Screen@8s /Source:|Destination:|Continue\?/
+Sleep 1s
 
+Type "y"
+Enter
 
-
-
-
+Wait+Screen@8s /Move completed successfully/
+Sleep 4s
 
 
 
